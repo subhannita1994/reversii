@@ -2,7 +2,6 @@ package com.multiplayerGame.reversii.business.service;
 
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
@@ -39,16 +38,16 @@ public class StartGameService {
 	
 	public StartReversii startGameSinglePlayer(String gameName, String playerName) {
 		
-		Optional<GameConfiguration> gameConfiguration = this.gameConfigurationRepository.findById(gameName);
+		GameConfiguration gameConfiguration = this.gameConfigurationRepository.findById(gameName).get();
 		Game game = new Game();
-		game.setGameConfiguration(gameConfiguration.get().getGameName());
+		game.setGameConfiguration(gameConfiguration.getGameName());
 		this.gameRepository.save(game);
 		
-		StartReversii startGame = new StartReversii();
+		StartReversii startGame = new StartReversii(gameConfiguration, gameName);
 		startGame.setGameID(game.getGameID());
 		
-		List<String> identifiers = this.identifierRepository.findTopFew(gameConfiguration.get().getNumberOfPlayers());
-		int score = gameConfiguration.get().getStartingScore();
+		List<String> identifiers = this.identifierRepository.findTopFew(gameConfiguration.getNumberOfPlayers());
+		int score = gameConfiguration.getStartingScore();
 		
 		Player playerHuman = new Player();
 		playerHuman.setGame_id(game.getGameID());
