@@ -1,11 +1,13 @@
 <html>
-
-<body>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.4-build.3588/angular.min.js"></script>
+</head>
+<body ng-app="gameBoard">
 <p th:text="'Game ID: '+${StartGame.getGameID()}" />
 <p th:text="'player 1 ID: '+${StartGame.getPlayerID1()}" />
 <p th:text="'player 2 ID: '+${StartGame.getPlayerID2()}" />
 
-<table>
+<table ng-controller = "boardController">
     <thead>
         <tr>
             <th>  </th>
@@ -20,18 +22,28 @@
     </thead>
     <tbody>
         <tr th:each="row : ${board}">
-            <td><img th:src="${'../images/' + row.getCell(0).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(1).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(2).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(3).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(4).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(5).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(6).getColor()}"></td>
-            <td><img th:src="${'../images/' + row.getCell(7).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(0).getRow()}+'\' , \''+${row.getCell(0).getCol()}+'\')'" th:src="${'../images/' + row.getCell(0).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(1).getRow()}+'\' , \''+${row.getCell(1).getCol()}+'\')'" th:src="${'../images/' + row.getCell(1).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(2).getRow()}+'\' , \''+${row.getCell(2).getCol()}+'\')'" th:src="${'../images/' + row.getCell(2).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(3).getRow()}+'\' , \''+${row.getCell(3).getCol()}+'\')'" th:src="${'../images/' + row.getCell(3).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(4).getRow()}+'\' , \''+${row.getCell(4).getCol()}+'\')'" th:src="${'../images/' + row.getCell(4).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(5).getRow()}+'\' , \''+${row.getCell(5).getCol()}+'\')'" th:src="${'../images/' + row.getCell(5).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(6).getRow()}+'\' , \''+${row.getCell(6).getCol()}+'\')'" th:src="${'../images/' + row.getCell(6).getColor()}"></td>
+            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(7).getRow()}+'\' , \''+${row.getCell(7).getCol()}+'\')'" th:src="${'../images/' + row.getCell(7).getColor()}"></td>
         </tr>
     </tbody>
 </table>
 
+<script type="text/javascript">
+angular.module('gameBoard', []).controller('boardController', function boardController($scope){
+	$scope.handleClick = function($row, $col){
+		console.log($row+$col+"clicked");
+	};
+	
+});
+
+
+</script>
 
 </body>
 

@@ -43,8 +43,6 @@ public class StartGameWebController {
 			}
 			rows.add(b);
 		}
-		
-		
 		model.addAttribute("board", rows);
 		
 		
