@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html >
+<head>
+<title>Reversii</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.4-build.3588/angular.min.js"></script>
+</head>
+<body ng-app = "reversii" ng-controller="LaunchController">
+
+<h1>Welcome to Reversii</h1>
+<form ng-submit="startGame()">
+<label for="playerName">Enter your name:</label><br>
+ <input type="text" id="playerName" name="playerName" ng-model="playerName" required><br>
+ <input type="submit" value="Start game">
+</form>
+
+<script>
+var reversii = angular.module('reversii', []);
+reversii.controller('LaunchController', function LaunchController($scope, $window){
+	$scope.startGame = function(){
+		$window.location = '/startReversii?gameName=REVERSII&playerName='+$scope.playerName;
+	}
+});
+</script>
+
+</body>
+
+
+</html>
