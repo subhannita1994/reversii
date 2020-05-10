@@ -1,35 +1,22 @@
 package com.multiplayerGame.reversii.business.domain;
 
+import java.util.ArrayList;
+
 public class Board {
-	private int row;
-	private int col;
-	private String color;
-	
-	public Board(int row, int col, String color) {
-		this.row = row;
-		this.col = col;
-		this.color = color;
-	}
-	
-	public int getRow() {
-		return row;
-	}
-	public void setRow(int row) {
-		this.row = row;
-	}
-	public int getCol() {
-		return col;
-	}
-	public void setCol(int col) {
-		this.col = col;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
+	private ArrayList<Cell> cells = new ArrayList<Cell>();
 	
 	
+	
+	public Cell getCell(int index) {
+		return cells.get(index);
+	}
+
+	public void setCells(ArrayList<Cell> cells) {
+		this.cells = cells;
+	}
+	
+	public void addCell(Cell c) {
+		this.cells.add(c);
+	}
 
 }

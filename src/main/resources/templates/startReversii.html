@@ -8,16 +8,26 @@
 <table>
     <thead>
         <tr>
-            <th> Row </th>
-            <th> Column </th>
-            <th> Image </th>
+            <th>  </th>
+            <th>  </th>
+            <th>  </th> 
+            <th>  </th>
+            <th>  </th>
+            <th>  </th>
+            <th>  </th>
+            <th>  </th>
         </tr>
     </thead>
     <tbody>
-        <tr th:each="cell : ${board}">
-            <td><span th:text="${cell.getRow()}"> Row </span></td>
-            <td><span th:text="${cell.getCol()}"> Column </span></td>
-            <td><img th:src="${'../images/' + cell.getColor()}"></td>
+        <tr th:each="row : ${board}">
+            <td><img th:src="${'../images/' + row.getCell(0).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(1).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(2).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(3).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(4).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(5).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(6).getColor()}"></td>
+            <td><img th:src="${'../images/' + row.getCell(7).getColor()}"></td>
         </tr>
     </tbody>
 </table>
