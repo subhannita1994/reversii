@@ -82,6 +82,8 @@ public class GameService {
 		startGame.setPlayerID1(player1.getPlayerID());
 		startGame.setPlayerID2(player2.getPlayerID());
 		startGame.setCurrentPlayer(player1.getPlayerID());
+		startGame.setPlayerIdentifier1(player1.getIdentifier());
+		startGame.setPlayerIdentifier2(player2.getIdentifier());
 		
 		games.put(game.getGameID(), startGame);
 		

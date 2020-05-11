@@ -51,7 +51,6 @@ public class GameController {
 	
 	@RequestMapping(value="/Reversii", method=RequestMethod.GET)
 	public String render(@RequestParam(value="gameID", required=true)int gameID, Model model) {
-		System.out.println("rendering...current player:"+games.get(gameID).getCurrentPlayer());
 		model.addAttribute("game", games.get(gameID));
 		
 		CellValue[][] boardValues = games.get(gameID).getBoard();
