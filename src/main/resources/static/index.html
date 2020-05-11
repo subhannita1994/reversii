@@ -18,7 +18,7 @@
 var reversii = angular.module('reversii', []);
 reversii.controller('LaunchController', function LaunchController($scope, $window){
 	$scope.startGame = function(){
-		$window.location = '/startReversii?gameName=REVERSII&playerName='+$scope.playerName;
+		$window.location = '/Reversii/start?gameName=REVERSII&playerName='+$scope.playerName;
 	}
 });
 </script>

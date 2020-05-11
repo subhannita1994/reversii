@@ -1,12 +1,13 @@
 package com.multiplayerGame.reversii.business.service;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
-import com.multiplayerGame.reversii.business.domain.StartReversii;
+import com.multiplayerGame.reversii.business.domain.Reversii;
 import com.multiplayerGame.reversii.data.entity.Game;
 import com.multiplayerGame.reversii.data.entity.GameConfiguration;
 import com.multiplayerGame.reversii.data.entity.Player;
@@ -17,7 +18,7 @@ import com.multiplayerGame.reversii.data.repository.PlayerRepository;
 import com.multiplayerGame.reversii.data.repository.PlayerTypeRepository;
 
 @Service
-public class StartGameService {
+public class GameService {
 	
 	private PlayerRepository playerRepository;
 	private GameRepository gameRepository;
@@ -25,8 +26,10 @@ public class StartGameService {
 	private IdentifierRepository identifierRepository;
 	private PlayerTypeRepository playerTypeRepository;
 	private Random rand;
+	private HashMap<Integer, Reversii> games = new HashMap<Integer, Reversii>();
 	
-	public StartGameService(PlayerRepository playerRepository, GameRepository gameRepository, GameConfigurationRepository gameConfigurationRepository, PlayerTypeRepository playerTypeRepository, IdentifierRepository identifierRepository) {
+	
+	public GameService(PlayerRepository playerRepository, GameRepository gameRepository, GameConfigurationRepository gameConfigurationRepository, PlayerTypeRepository playerTypeRepository, IdentifierRepository identifierRepository) {
 		this.playerRepository = playerRepository;
 		this.gameRepository = gameRepository;
 		this.gameConfigurationRepository = gameConfigurationRepository;
@@ -36,14 +39,14 @@ public class StartGameService {
 	}
 	
 	
-	public StartReversii startGameSinglePlayer(String gameName, String playerName) {
+	public Reversii startGameSinglePlayer(String gameName, String playerName) {
 		
 		GameConfiguration gameConfiguration = this.gameConfigurationRepository.findById(gameName).get();
 		Game game = new Game();
 		game.setGameConfiguration(gameConfiguration.getGameName());
 		this.gameRepository.save(game);
 		
-		StartReversii startGame = new StartReversii(gameConfiguration, gameName);
+		Reversii startGame = new Reversii(gameConfiguration, gameName);
 		startGame.setGameID(game.getGameID());
 		
 		List<String> identifiers = this.identifierRepository.findTopFew(gameConfiguration.getNumberOfPlayers());
@@ -74,11 +77,30 @@ public class StartGameService {
 		player2.setIdentifier(identifiers.get(1));
 		this.playerRepository.save(player1);
 		this.playerRepository.save(player2);
+		game.setCurrentPlayerID(player1);
+		this.gameRepository.save(game);
 		startGame.setPlayerID1(player1.getPlayerID());
 		startGame.setPlayerID2(player2.getPlayerID());
-
+		startGame.setCurrentPlayer(player1.getPlayerID());
+		
+		games.put(game.getGameID(), startGame);
 		
 		return startGame;
+	}
+	
+	public Reversii move(int gameID, int row, int col) {
+		Reversii gameLogic = games.get(gameID);
+		gameLogic.move(row, col);
+		
+		Game game = this.gameRepository.findById(gameID).get();
+		game.setCurrentPlayerID(this.playerRepository.findById(gameLogic.getCurrentPlayer()).get());
+		Player player1 = this.playerRepository.findById(gameLogic.getPlayerID1()).get();
+		Player player2 = this.playerRepository.findById(gameLogic.getPlayerID2()).get();
+		player1.setScore(gameLogic.getPlayerScore1());
+		player2.setScore(gameLogic.getPlayerScore2());
+		this.gameRepository.save(game);
+		
+		return gameLogic;
 	}
 
 }
