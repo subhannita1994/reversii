@@ -11,6 +11,8 @@ public class Reversii {
 	private int playerID2;
 	private int playerScore1;
 	private int playerScore2;
+	private String playerName1;
+	private String playerName2;
 	private CellValue playerIdentifier1;
 	private CellValue playerIdentifier2;
 	private CellValue[][] board;
@@ -26,10 +28,21 @@ public class Reversii {
 				this.board[i][j] = CellValue.EMPTY;
 		board[3][3] = board[4][4] = CellValue.WHITE;
 		board[4][3] = board[3][4] = CellValue.BLACK;
-		board[2][4] = board[3][5] = board[4][2] = board[5][3] = CellValue.POSSIBLE;
+		board[2][3] = board[3][2] = board[4][5] = board[5][4] = CellValue.POSSIBLE;
 		this.playerScore1 = this.playerScore2 = 2;
 	}
-	
+	public void setPlayerName1(String playerName) {
+		this.playerName1 = playerName;
+	}
+	public void setPlayerName2(String playerName) {
+		this.playerName2 = playerName;
+	}
+	public String getPlayerName1() {
+		return this.playerName1;
+	}
+	public String getPlayerName2() {
+		return this.playerName2;
+	}
 	public void setPlayerIdentifier1(String identifier) {
 		if(identifier.equals("BLACK"))
 			playerIdentifier1 = CellValue.BLACK;

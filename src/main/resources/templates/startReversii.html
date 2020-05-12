@@ -1,12 +1,32 @@
 <html>
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.4-build.3588/angular.min.js"></script>
+<style>
+
+
+.row {
+  display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 5px;
+}
+</style>
 </head>
 <body ng-app="gameBoard">
 <p th:text="'Game ID: '+${game.getGameID()}" />
-<p th:text="'player 1 ID: '+${game.getPlayerID1()}" />
-<p th:text="'player 2 ID: '+${game.getPlayerID2()}" />
-<p th:text="'current player ID: '+${game.getCurrentPlayer()}" />
+<div class="row">
+<div class="column">
+<img src="../images/BLACK.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID1()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''" >
+<p th:text="${game.getPlayerName1()}" />
+</div>
+<div class="column">
+<img src="../images/WHITE.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID2()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''">
+<p th:text="${game.getPlayerName2()}" />
+</div>
+</div>
 
 <table ng-controller = "boardController">
     <thead>

@@ -31,13 +31,28 @@ public class GameController {
 	
 	
 
-	@RequestMapping(value = "/Reversii/start" , method = RequestMethod.GET )
+	@RequestMapping(value = "/Reversii/startSinglePlayer" , method = RequestMethod.GET )
 	public String getGameSinglePlayer(@RequestParam(value="gameName", required=true)String gameName, @RequestParam(value="playerName", required=true) String playerName) {
 		
 		Reversii startGame = this.startGameService.startGameSinglePlayer(gameName, playerName);
 		this.games.put(startGame.getGameID(), startGame);
 		
 		return "redirect:/Reversii?gameID="+startGame.getGameID();
+	}
+	
+	@RequestMapping(value="/Reversii/startMultiPlayer", method=RequestMethod.GET)
+	public String getGameMultiPlayer(@RequestParam(value="gameName", required=true)String gameName, @RequestParam(value="playerName", required=true)String playerName) {
+		Reversii startGame = this.startGameService.startGameMultiPlayer(gameName, playerName);
+		this.games.put(startGame.getGameID(), startGame);
+
+		return "redirect:/Reversii?gameID="+startGame.getGameID();
+	}
+	
+	@RequestMapping(value="/Reversii/startMultiPlayerExistingGame", method=RequestMethod.GET)
+	public String getGameMultiPlayerExisting(@RequestParam(value="gameName", required=true)String gameName, @RequestParam(value="playerName", required=true)String playerName, @RequestParam(value="gameID", required=true)int gameID) {
+		Reversii startGame = this.startGameService.startGameMultiPlayerExisting(gameName, playerName, gameID);
+		this.games.put(gameID, startGame);
+		return "redirect:/Reversii?gameID="+gameID;
 	}
 	
 	@RequestMapping(value = "/Reversii/move" , method = RequestMethod.GET )

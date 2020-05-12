@@ -9,16 +9,37 @@
 
 <h1>Welcome to Reversii</h1>
 <form ng-submit="startGame()">
-<label for="playerName">Enter your name:</label><br>
+
+
+<label for="playerName">Enter your name:</label>
  <input type="text" id="playerName" name="playerName" ng-model="playerName" required><br>
+ 
+ <label><input type="radio" name="mode" value="singlePlayer" ng-model="value" ng-change="mode(value)" required>Play against Computer</label><br>
+ <label><input type="radio" name="mode" value="multiPlayer" ng-model="value" ng-change="mode(value)">Play against a friend</label><br>
+ 
+ <label>Enter the Game ID (if you have one) to join an existing game:<input type="text" id="gameID" name="gameID" ng-model="gameID"></label><br>
+ 
  <input type="submit" value="Start game">
 </form>
 
 <script>
 var reversii = angular.module('reversii', []);
 reversii.controller('LaunchController', function LaunchController($scope, $window){
+	$scope.mode = function(value){
+		if(value.localeCompare("singlePlayer") == 0){
+			document.getElementById("gameID").disabled = true;
+		}else{
+			document.getElementById("gameID").disabled = false;
+		}
+	}
 	$scope.startGame = function(){
-		$window.location = '/Reversii/start?gameName=REVERSII&playerName='+$scope.playerName;
+		if($scope.value.localeCompare("singlePlayer") == 0){
+			$window.location = '/Reversii/startSinglePlayer?gameName=REVERSII&playerName='+$scope.playerName;
+		}else if (typeof $scope.gameID === 'undefined' || $scope.gameID.length === 0){
+			$window.location = '/Reversii/startMultiPlayer?gameName=REVERSII&playerName='+$scope.playerName;
+		}else{
+			$window.location = '/Reversii/startMultiPlayerExistingGame?gameName=REVERSII&playerName='+$scope.playerName+'&gameID='+$scope.gameID;
+		}
 	}
 });
 </script>
