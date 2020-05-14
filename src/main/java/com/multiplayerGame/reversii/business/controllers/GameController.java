@@ -1,9 +1,12 @@
 package com.multiplayerGame.reversii.business.controllers;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.ErrorManager;
 
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,10 +20,12 @@ import com.multiplayerGame.reversii.business.domain.Cell;
 import com.multiplayerGame.reversii.business.domain.CellValue;
 import com.multiplayerGame.reversii.business.domain.Reversii;
 import com.multiplayerGame.reversii.business.service.GameService;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Controller
 public class GameController {
-	
+
+
 	private final GameService startGameService;
 	private HashMap<Integer, Reversii> games = new HashMap<Integer, Reversii>();
 	@Autowired
@@ -79,6 +84,23 @@ public class GameController {
 		}
 		model.addAttribute("board", rows);
 		return "startReversii";
+	}
+
+	@GetMapping(path = "/Reversii/startMultiPlayer/sse")
+	public SseEmitter handleSse(@RequestParam(value="gameID", required=true)int gameID, Model model) {
+		SseEmitter emitter = new SseEmitter();
+		SseEmitter.SseEventBuilder evtBuilder = SseEmitter.event()
+				.id(Integer.toString(gameID));
+			try {
+				emitter.send(evtBuilder);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		return emitter;
+
+	
+
+
 	}
 	
 	

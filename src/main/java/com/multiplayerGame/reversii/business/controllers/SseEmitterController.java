@@ -1,20 +1,23 @@
 package com.multiplayerGame.reversii.business.controllers;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.codec.ServerSentEvent;
+import com.multiplayerGame.reversii.data.repository.GameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Controller
 public class SseEmitterController {
+    private final GameRepository gameRepository;
     private ExecutorService nonBlockingService = Executors
             .newCachedThreadPool();
+
+    public SseEmitterController(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
 
     @GetMapping("/sse")
     public SseEmitter handleSse() {
