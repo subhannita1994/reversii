@@ -92,9 +92,14 @@ public class Reversii {
 	public int getPlayerScore2() {
 		return this.playerScore2;
 	}
+	public int getPlayerIDByName(String playerName) {
+		if(this.playerName1.equals(playerName))
+			return this.playerID1;
+		else
+			return this.playerID2;
+	}
 	
-	public void move(int rowIndex, int colIndex) {
-		if(board[rowIndex][colIndex].equals(CellValue.POSSIBLE)) {
+	public void  move(int rowIndex, int colIndex) {
 			//change the board
 			CellValue curPlayerCellValue = (this.currentPllayerID == playerID1) ? this.playerIdentifier1 : this.playerIdentifier2;
 			CellValue oppoPlayerCellValue = (this.currentPllayerID == playerID1) ? this.playerIdentifier2 : this.playerIdentifier1;
@@ -175,7 +180,8 @@ public class Reversii {
 				this.currentPllayerID = this.playerID2;
 			else
 				this.currentPllayerID = this.playerID1;
-		}
+			
+		
 			
 	}
 	
@@ -252,6 +258,7 @@ public class Reversii {
 			nextPos = null;
 		return nextPos;
 	}
+	
 
 }
 

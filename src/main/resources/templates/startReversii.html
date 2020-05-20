@@ -1,6 +1,8 @@
 <html>
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.4-build.3588/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <style>
 
 
@@ -57,18 +59,34 @@
 
 <script th:inline="javascript">
 /*<![CDATA[*/
+	
+	
 
 angular.module('gameBoard', [], function($httpProvider) {
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+  
 
 }).controller('boardController', function boardController($scope, $http, $window){
-	
+
+	  var socket = new SockJS('/move');
+	  var stompClient = Stomp.over(socket);
+	  stompClient.connect({}, function(frame) {
+	      console.log('Connected: ' + frame);
+	      $gameID = /*[[${game.getGameID()}]]*/ 'undefined';
+	      stompClient.subscribe('/Reversii?gameID='+$gameID, function(gameResponse){
+	          console.log(JSON.parse(gameResponse.body).content);	//this is where we should assign thymeleaf model attributes
+	      });
+	  });
+	  
 	$scope.handleClick = function($row, $col){
 		$gameID = /*[[${game.getGameID()}]]*/ 'undefined';
-		$http.get('/Reversii/move?gameID='+$gameID+'&row='+$row+'&col='+$col, {}).then(function onSuccess(response){
+		$playerID = /*[[${playerID}]]*/ 'undefined';
+		/* $http.get('/Reversii/move?gameID='+$gameID+'&row='+$row+'&col='+$col, {}).then(function onSuccess(response){
 			$window.location.reload();			
-		});
+		});  */
+		stompClient.send("/Reversii/move", {}, JSON.stringify({ 'playerID': $playerID, 'gameID': $gameID, 'row' : $row , 'col' : $col }));
 	};
+	
 	
 });
 

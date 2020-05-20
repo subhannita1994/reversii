@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
+import com.multiplayerGame.reversii.business.domain.CellValue;
 import com.multiplayerGame.reversii.business.domain.Reversii;
 import com.multiplayerGame.reversii.data.entity.Game;
 import com.multiplayerGame.reversii.data.entity.GameConfiguration;
@@ -152,8 +153,10 @@ public class GameService {
 	}
 	
 	
-	public Reversii move(int gameID, int row, int col) {
+	public Reversii move(int gameID, int playerID, int row, int col) {
 		Reversii gameLogic = games.get(gameID);
+		if(games.get(gameID).getCurrentPlayer() != playerID || !(gameLogic.getBoard()[row][col].equals(CellValue.POSSIBLE)))
+			return null;
 		gameLogic.move(row, col);
 		
 		Game game = this.gameRepository.findById(gameID).get();
