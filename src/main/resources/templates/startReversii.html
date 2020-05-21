@@ -68,7 +68,7 @@ angular.module('gameBoard', [], function($httpProvider) {
 
 }).controller('boardController', function boardController($scope, $http, $window){
 
-	  var socket = new SockJS('/move');
+	  var socket = new SockJS('/gs-guide-websocket');
 	  var stompClient = Stomp.over(socket);
 	  stompClient.connect({}, function(frame) {
 	      console.log('Connected: ' + frame);

@@ -8,6 +8,7 @@ import java.util.logging.ErrorManager;
 
 import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -32,11 +33,11 @@ public class GameController {
 
 	private final GameService startGameService;
 	private HashMap<Integer, Reversii> games = new HashMap<Integer, Reversii>();
-	private SseEmitter emitter;
+	
+	
 	@Autowired
 	public GameController(GameService startGameService) {
 		this.startGameService =  startGameService;
-		this.emitter = new SseEmitter();
 	}
 	
 	
@@ -78,22 +79,12 @@ public class GameController {
 		return "startReversii";
 	}
 	
-//	@RequestMapping(value = "/Reversii/move" , method = RequestMethod.GET )
-//	public String handleClick(@RequestParam(value="gameID", required=true)int gameID,@RequestParam(value="row", required=true)int row,@RequestParam(value="col", required=true)int col ) {
-//		System.out.println("game controller: clicked on "+row+col);
-//		Reversii game = this.startGameService.move(gameID, row, col);
-//		
-//		this.games.put(game.getGameID(), game);
-//		
-//		return "redirect:/Reversii?gameID="+game.getGameID();
-//	}
 	
 	@MessageMapping("/move")
 	@SendTo("/Reversii?gameID={gameID}")
 	public GameResponse move(PlayerMessage message) {
 		System.out.println("game controller: "+message.getGameID()+":"+message.getPlayerID()+"clicked on "+message.getRow()+message.getCol());
 		Reversii game = this.startGameService.move(message.getGameID(), message.getPlayerID(), message.getRow(), message.getCol());
-		
 		if(game!=null) {
 			this.games.put(game.getGameID(), game);
 			return new GameResponse(true, game.getGameID(), this.makeBoard(game));
@@ -101,28 +92,6 @@ public class GameController {
 			return new GameResponse(false, message.getGameID(), null);
 		
 	}
-	
-//	@RequestMapping(value="/Reversii", method=RequestMethod.GET)
-//	public String render(@RequestParam(value="gameID", required=true)int gameID, Model model) throws IOException {
-//		
-//		model.addAttribute("game", games.get(gameID));
-//		
-//		CellValue[][] boardValues = games.get(gameID).getBoard();
-//		ArrayList<Board> rows = new ArrayList<Board>();
-//		for(int i=0;i<boardValues.length; i++) {
-//			Board b = new Board();
-//			for(int j=0;j<boardValues[0].length; j++) {
-//				b.addCell(new Cell(i,j,boardValues[i][j].toString()+".png"));
-//			}
-//			rows.add(b);
-//		}
-//		model.addAttribute("board", rows);
-//		
-//		 
-//	
-//			
-//		return "startReversii";
-//	}
 	
 	
 	private ArrayList<Board> makeBoard(Reversii startGame) {
