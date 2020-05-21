@@ -73,7 +73,7 @@ angular.module('gameBoard', [], function($httpProvider) {
 	  stompClient.connect({}, function(frame) {
 	      console.log('Connected: ' + frame);
 	      $gameID = /*[[${game.getGameID()}]]*/ 'undefined';
-	      stompClient.subscribe('/Reversii?gameID='+$gameID, function(gameResponse){
+	      stompClient.subscribe('/Reversii/'+$gameID, function(gameResponse){
 	          console.log(JSON.parse(gameResponse.body).content);	//this is where we should assign thymeleaf model attributes
 	      });
 	  });
@@ -84,7 +84,7 @@ angular.module('gameBoard', [], function($httpProvider) {
 		/* $http.get('/Reversii/move?gameID='+$gameID+'&row='+$row+'&col='+$col, {}).then(function onSuccess(response){
 			$window.location.reload();			
 		});  */
-		stompClient.send("/Reversii/move", {}, JSON.stringify({ 'playerID': $playerID, 'gameID': $gameID, 'row' : $row , 'col' : $col }));
+		stompClient.send("/Reversii/"+$gameID, {}, JSON.stringify({ 'playerID': $playerID, 'gameID': $gameID, 'row' : $row , 'col' : $col }));
 	};
 	
 	

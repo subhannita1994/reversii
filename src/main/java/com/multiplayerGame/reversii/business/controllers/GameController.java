@@ -9,6 +9,7 @@ import java.util.logging.ErrorManager;
 import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -80,9 +81,9 @@ public class GameController {
 	}
 	
 	
-	@MessageMapping("/move")
-	@SendTo("/Reversii?gameID={gameID}")
-	public GameResponse move(PlayerMessage message) {
+	@MessageMapping("/move/{gameID}")
+	@SendTo("/Reversii/{gameID}")
+	public GameResponse move(@DestinationVariable String gameID, PlayerMessage message) {
 		System.out.println("game controller: "+message.getGameID()+":"+message.getPlayerID()+"clicked on "+message.getRow()+message.getCol());
 		Reversii game = this.startGameService.move(message.getGameID(), message.getPlayerID(), message.getRow(), message.getCol());
 		if(game!=null) {
