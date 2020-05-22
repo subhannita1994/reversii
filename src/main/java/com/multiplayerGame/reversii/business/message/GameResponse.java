@@ -8,11 +8,11 @@ public class GameResponse {
 	
 	private boolean success;
 	private int gameID;
-	private ArrayList<Board> rows;
-	public GameResponse(boolean success, int gameID, ArrayList<Board> rows) {
+	String[][] board;
+	public GameResponse(boolean success, int gameID, String[][] board) {
 		this.success = success;
 		this.gameID = gameID;
-		this.rows = rows;
+		this.board = board;
 	}
 	public boolean isSuccess() {
 		return success;
@@ -26,11 +26,11 @@ public class GameResponse {
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
-	public ArrayList<Board> getRows() {
-		return rows;
+	public String[][] getBoard(){
+		return this.board;
 	}
-	public void setRows(ArrayList<Board> rows) {
-		this.rows = rows;
+	public void setBoard(String[][] board) {
+		this.board = board;
 	}
 
 }

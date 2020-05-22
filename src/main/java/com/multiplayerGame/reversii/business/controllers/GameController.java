@@ -88,7 +88,14 @@ public class GameController {
 		Reversii game = this.startGameService.move(message.getGameID(), message.getPlayerID(), message.getRow(), message.getCol());
 		if(game!=null) {
 			this.games.put(game.getGameID(), game);
-			return new GameResponse(true, game.getGameID(), this.makeBoard(game));
+			CellValue[][] boardValues = game.getBoard();
+			String[][] board = new String[boardValues.length][boardValues[0].length];
+			for(int i=0;i<boardValues.length; i++) {
+				for(int j=0;j<boardValues[0].length; j++) {
+					board[i][j] = boardValues[i][j].toString()+".png";
+				}
+			}
+			return new GameResponse(true, game.getGameID(), board);
 		}else
 			return new GameResponse(false, message.getGameID(), null);
 		

@@ -21,11 +21,11 @@
 <p th:text="'Game ID: '+${game.getGameID()}" />
 <div class="row">
 <div class="column">
-<img src="../images/BLACK.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID1()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''" >
+<img id="player1Box" src="../images/BLACK.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID1()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''" >
 <p th:text="${game.getPlayerName1()}" />
 </div>
 <div class="column">
-<img src="../images/WHITE.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID2()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''">
+<img id="player2Box" src="../images/WHITE.png" th:style ="${game.getCurrentPlayer()} eq ${game.getPlayerID2()} ? 'border-style:solid; border-color:coral; border-width:thick' : ''">
 <p th:text="${game.getPlayerName2()}" />
 </div>
 </div>
@@ -45,14 +45,14 @@
     </thead>
     <tbody>
         <tr th:each="row : ${board}">
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(0).getRow()}+'\' , \''+${row.getCell(0).getCol()}+'\')'" th:src="${'../images/' + row.getCell(0).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(1).getRow()}+'\' , \''+${row.getCell(1).getCol()}+'\')'" th:src="${'../images/' + row.getCell(1).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(2).getRow()}+'\' , \''+${row.getCell(2).getCol()}+'\')'" th:src="${'../images/' + row.getCell(2).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(3).getRow()}+'\' , \''+${row.getCell(3).getCol()}+'\')'" th:src="${'../images/' + row.getCell(3).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(4).getRow()}+'\' , \''+${row.getCell(4).getCol()}+'\')'" th:src="${'../images/' + row.getCell(4).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(5).getRow()}+'\' , \''+${row.getCell(5).getCol()}+'\')'" th:src="${'../images/' + row.getCell(5).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(6).getRow()}+'\' , \''+${row.getCell(6).getCol()}+'\')'" th:src="${'../images/' + row.getCell(6).getColor()}"></td>
-            <td><img th:attr="ng-click='handleClick(\''+${row.getCell(7).getRow()}+'\' , \''+${row.getCell(7).getCol()}+'\')'" th:src="${'../images/' + row.getCell(7).getColor()}"></td>
+            <td><img th:id="${row.getCell(0).getRow()}+','+${row.getCell(0).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(0).getRow()}+'\' , \''+${row.getCell(0).getCol()}+'\')'" th:src="${'../images/' + row.getCell(0).getColor()}"></td>
+            <td><img th:id="${row.getCell(1).getRow()}+','+${row.getCell(1).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(1).getRow()}+'\' , \''+${row.getCell(1).getCol()}+'\')'" th:src="${'../images/' + row.getCell(1).getColor()}"></td>
+            <td><img th:id="${row.getCell(2).getRow()}+','+${row.getCell(2).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(2).getRow()}+'\' , \''+${row.getCell(2).getCol()}+'\')'" th:src="${'../images/' + row.getCell(2).getColor()}"></td>
+            <td><img th:id="${row.getCell(3).getRow()}+','+${row.getCell(3).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(3).getRow()}+'\' , \''+${row.getCell(3).getCol()}+'\')'" th:src="${'../images/' + row.getCell(3).getColor()}"></td>
+            <td><img th:id="${row.getCell(4).getRow()}+','+${row.getCell(4).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(4).getRow()}+'\' , \''+${row.getCell(4).getCol()}+'\')'" th:src="${'../images/' + row.getCell(4).getColor()}"></td>
+            <td><img th:id="${row.getCell(5).getRow()}+','+${row.getCell(5).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(5).getRow()}+'\' , \''+${row.getCell(5).getCol()}+'\')'" th:src="${'../images/' + row.getCell(5).getColor()}"></td>
+            <td><img th:id="${row.getCell(6).getRow()}+','+${row.getCell(6).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(6).getRow()}+'\' , \''+${row.getCell(6).getCol()}+'\')'" th:src="${'../images/' + row.getCell(6).getColor()}"></td>
+            <td><img th:id="${row.getCell(7).getRow()}+','+${row.getCell(7).getCol()}" th:attr="ng-click='handleClick(\''+${row.getCell(7).getRow()}+'\' , \''+${row.getCell(7).getCol()}+'\')'" th:src="${'../images/' + row.getCell(7).getColor()}"></td>
         </tr>
     </tbody>
 </table>
@@ -74,17 +74,31 @@ angular.module('gameBoard', [], function($httpProvider) {
 	      console.log('Connected: ' + frame);
 	      $gameID = /*[[${game.getGameID()}]]*/ 'undefined';
 	      stompClient.subscribe('/Reversii/'+$gameID, function(gameResponse){
-	          console.log(JSON.parse(gameResponse.body).content);	//this is where we should assign thymeleaf model attributes
+	    	  if(JSON.parse(gameResponse.body).success){
+	    		  var player1 = document.getElementById("player1Box");
+	    		  var player2 = document.getElementById("player2Box");
+	    		  if(player1.getAttribute("style")){
+	    			  player1.removeAttribute("style");
+	    			  player2.style.border ="thick solid coral";
+	    		  }else{
+	    			  player2.removeAttribute("style");
+	    			  player1.style.border="thick solid coral";
+	    		  } 
+	    		  var i,j;
+	    		  for(i=0;i<8;i++){
+	    			  for(j=0;j<8;j++){
+	    				  document.getElementById(i+","+j).src = "../images/"+JSON.parse(gameResponse.body).board[i][j];
+	    			  }
+	    		  }
+	    	  }
+	    		  
 	      });
 	  });
 	  
 	$scope.handleClick = function($row, $col){
 		$gameID = /*[[${game.getGameID()}]]*/ 'undefined';
 		$playerID = /*[[${playerID}]]*/ 'undefined';
-		/* $http.get('/Reversii/move?gameID='+$gameID+'&row='+$row+'&col='+$col, {}).then(function onSuccess(response){
-			$window.location.reload();			
-		});  */
-		stompClient.send("/Reversii/"+$gameID, {}, JSON.stringify({ 'playerID': $playerID, 'gameID': $gameID, 'row' : $row , 'col' : $col }));
+		stompClient.send("/Reversii/move/"+$gameID, {}, JSON.stringify({ 'playerID': $playerID, 'gameID': $gameID, 'row' : $row , 'col' : $col }));
 	};
 	
 	
